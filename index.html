@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookWorld - Your Online Bookstore</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            background-color: #2c3e50;
+        }
+        .navbar-brand, .nav-link {
+            color: #ecf0f1 !important;
+        }
+        .jumbotron {
+            background-image: url('https://source.unsplash.com/1600x900/?library,books');
+            background-size: cover;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        .book-card {
+            height: 100%;
+            transition: transform 0.3s;
+        }
+        .book-card:hover {
+            transform: scale(1.05);
+        }
+        .favorite-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #e74c3c;
+            cursor: pointer;
+        }
+        .modal-body {
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">BookWorld</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#books">Books</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="jumbotron jumbotron-fluid py-5" id="home">
+        <div class="container text-center">
+            <h1 class="display-4" style="color: black;">Welcome to BookWorld</h1>
+            <p class="lead" style="color: black;">Discover your next favorite book with us!</p>
+        </div>
+    </div>
+
+    <div class="container my-5" id="books">
+        <h2 class="text-center mb-4">Featured Books</h2>
+        <div class="row" id="bookList">
+            <!-- Books will be dynamically added here -->
+        </div>
+    </div>
+
+    <div class="bg-light py-5" id="about">
+        <div class="container">
+            <h2 class="text-center mb-4">About Us</h2>
+            <p class="text-center">BookWorld is an online platform that has been connecting book lovers and readers with the stories and knowledge they seek for over a year now. 
+                The website is designed to make books easily accessible to people from all walks of life, whether you're a casual reader or an avid bookworm, looking for a specific title or exploring new genres..</p>
+                <h5 class="text-center">What We Offer:</h5>
+                <ul>
+                    <li><b>Wide Range of Books:</b> BookWorld offers a large collection of books across various genres, from fiction and non-fiction to educational, self-help, and much more. Whether you're into contemporary novels, historical works, or seeking academic resources, we have something for everyone.</li>
+                    <li><b>Affordable Prices:</b> We understand the value of a good book, and we make it a priority to offer our customers books at affordable prices, ensuring that everyone, regardless of budget, can enjoy reading.</li>
+                    <li><b>Accessible for Everyone:</b> With a focus on providing books to those in need, BookWorld offers a range of free and discounted books to ensure that people from all backgrounds can access the literature they desire.</li>
+                    <li><b>User-Friendly Platform:</b> The BookWorld website is easy to navigate, providing a smooth browsing experience. You can find books quickly through our simple search function, or explore curated collections based on themes, bestsellers, and new arrivals.</li>
+                </ul>
+
+                <h5 class="text-center"><span style="color:#2c3e50; font-weight:600">"There is no friend as loyal as a book."</span></h5>
+        </div>
+    </div>
+
+    <div class="container my-5" id="contact">
+        <h2 class="text-center mb-4">Contact Us</h2>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <form>
+                    <div class="mb-3">
+                        <input type="text" class="form-control" placeholder="Your Name" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="email" class="form-control" placeholder="Your Email" required>
+                    </div>
+                    <div class="mb-3">
+                        <textarea class="form-control" rows="5" placeholder="Your Message" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white text-center py-3">
+        <p>&copy; 2023 BookWorld. All rights reserved.</p>
+    </footer>
+
+    <!-- Book Details Modal -->
+    <div class="modal fade" id="bookModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="bookTitle"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <img id="bookCover" src="" alt="Book Cover" class="img-fluid">
+                        </div>
+                        <div class="col-md-8">
+                            <p id="bookAuthor"></p>
+                            <p id="bookDescription"></p>
+                            <div id="bookRating"></div>
+                            <h5 class="mt-4">Reviews</h5>
+                            <div id="bookReviews"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="buyBook()">Buy Now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const books = [
+            {
+                id: 1,
+                title: "Ramayana",
+                author: "Valmiki",
+                cover: "https://images-na.ssl-images-amazon.com/images/I/91S9-+lV75L.jpg",
+                description: "An ancient Indian epic that narrates the journey of Rama, the prince of Ayodhya, and his quest to rescue his wife Sita from the demon king Ravana.",
+                rating: 4.9,
+                reviews: [
+                    { user: "Arjun S.", comment: "A timeless classic that teaches valuable life lessons.", rating: 5 },
+                    { user: "Priya M.", comment: "Beautiful storytelling with deep philosophical insights.", rating: 5 }
+                ]
+
+            },
+            {
+                id: 2,
+                title: "Mahabharata",
+                author: "Vyasa",
+                cover: "https://2.imimg.com/data2/PW/MM/MY-531696/mahabharat-9788179041291-1000x1000.jpg",
+                description: "One of the two major Sanskrit epics of ancient India, it narrates the struggle between two groups of cousins in the Kurukshetra War.",
+                rating: 4.8,
+                reviews: [
+                    { user: "Rahul K.", comment: "An epic tale of duty, honor, and moral dilemmas.", rating: 5 },
+                    { user: "Anita G.", comment: "Complex characters and intricate plot. A must-read!", rating: 4 }
+                ]
+
+            },
+            {
+                id: 3,
+                title: "Bhagavad Gita",
+                author: "Vyasa",
+                cover: "https://i5.walmartimages.com/asr/63a31b09-92b1-4d73-8d79-ee24cb25fb82.98cafbe5b56b0d24b3de61430f574741.jpeg?odnWidth=1000&odnHeight=1000&odnBg=ffffffhttps://wallpaperaccess.com/full/4524259.jpg",
+                description: "A 700-verse Hindu scripture that is part of the epic Mahabharata, containing spiritual and philosophical teachings.",
+                rating: 4.9,
+                reviews: [
+                    { user: "Vikram S.", comment: "Profound wisdom that's relevant even in modern times.", rating: 5 },
+                    { user: "Meera R.", comment: "A guide to living a fulfilling life. Highly recommended.", rating: 5 }
+                ]
+
+            },
+            {
+                id: 4,
+                title: "Gitanjali",
+                author: "Rabindranath Tagore",
+                cover: "https://olivepublications.in/wp-content/uploads/2020/09/aec80170-5991-4084-a6ef-62034de4a68e.jpg",
+                description: "A collection of poems that won Tagore the Nobel Prize in Literature in 1913.",
+                rating: 4.7,
+                reviews: [
+                    { user: "Aditya P.", comment: "Beautiful, soul-stirring poetry.", rating: 5 },
+                    { user: "Sonia M.", comment: "Tagore's mastery of language shines through.", rating: 4 }
+            ]
+            },
+            {
+                id: 5,
+                title: "The Guide",
+                author: "R.K. Narayan",
+                cover: "https://tse1.mm.bing.net/th?id=OIP.5ZmTn6OykFtCB_tgh0IKcgHaL7&pid=Api&P=0&h=180",
+                description: "A tale of a man's transformation from a tourist guide to a spiritual leader.",
+                rating: 4.5,
+                reviews: [
+                    { user: "Karthik N.", comment: "Narayan's storytelling is captivating.", rating: 5 },
+                    { user: "Lakshmi S.", comment: "A fascinating journey of self-discovery.", rating: 4 }
+                ]
+            },
+            {
+                id: 6,
+                title: "The White Tiger",
+                author: "Aravind Adiga",
+                cover: "https://i.pinimg.com/736x/0f/d5/17/0fd517d935709e6e5bb23a9d49ac3c2e--white-tigers-the-white.jpg",
+                description: "A dark, gripping narrative on the life of a lower-caste man in modern India, exploring social mobility and corruption.",
+                rating: 4.3,
+                reviews: [
+                    { user: "Ravi T.", comment: "A raw and honest portrayal of modern India.", rating: 4 },
+                    { user: "Neha D.", comment: "Thought-provoking and unsettling. Great read!", rating: 5 }
+                ]
+            },
+            {
+                id: 7,
+                title: "The God of Small Things",
+                author: "Arundhati Roy",
+                cover: "https://i.pinimg.com/originals/43/11/78/431178fae4ed1935ddf83889bd49bea8.jpg",
+                description: "A semi-autobiographical story set in Kerala, examining family, love, and social issues.",
+                rating: 4.4,
+                reviews: [
+                    { user: "Anjali K.", comment: "Beautifully written with vivid imagery.", rating: 5 },
+                    { user: "Suresh P.", comment: "A poignant tale that stays with you.", rating: 4 }
+                ]
+            },
+            {
+                id: 8,
+                title: "Midnight's Children",
+                author: "Salman Rushdie",
+                cover: "https://media1.popsugar-assets.com/files/thumbor/nXssdgmB_mWTSIwtJxmpKUbvXkw/fit-in/1024x1024/filters:format_auto-!!-:strip_icc-!!-/2018/11/07/867/n/1922283/bea5bf0b5be341e267c383.47803111_85._81mOnJxoDTL/i/Midnight-Children-Salman-Rushdie.jpg",
+                description: "A magical realist novel that chronicles the lives of children born in India during the moment of its independence from British rule.",
+                rating: 4.8,
+                reviews: [
+                    { user: "Rohit B.", comment: "A brilliant blend of history and magic.", rating: 5 },
+                    { user: "Priya S.", comment: "A challenging yet rewarding read.", rating: 4 }
+                ]
+            },
+            {
+                id: 9,
+                title: "The Inheritance of Loss",
+                author: "Kiran Desai",
+                cover: "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1327909065i/95186.jpg",
+                description: "Set in the Indian Himalayas, this novel explores themes of identity, migration, and the legacy of colonialism.",
+                rating: 4.6,
+                reviews: [
+                    { user: "Neelam T.", comment: "A poignant exploration of cultural displacement.", rating: 5 },
+                    { user: "Asha P.", comment: "Beautifully written, though slow-paced.", rating: 4 }
+                ]
+            },
+            {
+                id: 10,
+                title: "A Fine Balance",
+                author: "Rohinton Mistry",
+                cover: "https://tse1.mm.bing.net/th?id=OIP.3rxG94L6szD34cIUmsuYqAAAAA&pid=Api&P=0&h=180",
+                description: "A gripping novel that delves into the lives of four strangers from different walks of life in 1970s India, living in the midst of political turmoil.",
+                rating: 4.7,
+                reviews: [
+                    { user: "Vikram G.", comment: "A heart-wrenching story about survival and hope.", rating: 5 },
+                    { user: "Neha R.", comment: "Beautifully tragic and deeply insightful.", rating: 4 }
+                ]
+            },
+            {
+                id: 11,
+                title: "Shantaram",
+                author: "Gregory David Roberts",
+                cover: "https://rodolfogrimaldi.com/wp-content/uploads/2015/03/Shantaram-Book-Cover.jpg",
+                description: "An epic novel set in the underworld of Bombay, detailing the life of an Australian fugitive.",
+                rating: 4.4,
+                reviews: [
+                    { user: "Arvind S.", comment: "A thrilling adventure with unforgettable characters.", rating: 5 },
+                    { user: "Tanya D.", comment: "Lengthy but worth every page.", rating: 4 }
+                ]
+            },
+            {
+                id: 12,
+                title: "The Palace of Illusions",
+                author: "Chitra Banerjee Divakaruni",
+                cover: "https://www.bookishelf.com/wp-content/uploads/2019/11/Book-Review-The-Palace-of-Illusions-by-Chitra-Banerjee-Divakaruni-scaled.jpg",
+                description: "A retelling of the Mahabharata from the perspective of Draupadi, the fiery queen of the epic.",
+                rating: 4.5,
+                reviews: [
+                    { user: "Shweta B.", comment: "A refreshing new take on an ancient story.", rating: 5 },
+                    { user: "Meenal S.", comment: "A beautiful narrative of strength and resilience.", rating: 4 }
+                ]
+            },
+            {
+                id: 13,
+                title: "Train to Pakistan",
+                author: "Khushwant Singh",
+                cover: "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1599410785i/785454.jpg",
+                description: "A poignant and tragic account of the Partition of India in 1947, showing its impact on ordinary lives.",
+                rating: 4.8,
+                reviews: [
+                    { user: "Aakash J.", comment: "A gripping, heartbreaking tale of partition.", rating: 5 },
+                    { user: "Priya M.", comment: "A moving portrayal of historical trauma.", rating: 5 }
+                ]
+            },
+            {
+                id: 14,
+                title: "The White Mughals",
+                author: "William Dalrymple",
+                cover: "http://media-cache-ak0.pinimg.com/736x/db/1e/bc/db1ebc718590b267898c12c26273a95d.jpg",
+                description: "A historical narrative that explores the relationships between British officers and Indian women during the 18th century Mughal Empire.",
+                rating: 4.6,
+                reviews: [
+                    { user: "Rajesh S.", comment: "A fascinating look into colonial history.", rating: 5 },
+                    { user: "Sonal K.", comment: "Engaging and well-researched.", rating: 4 }
+                ]
+            },
+            {
+                id: 15,
+                title: "The Secret Daughter",
+                author: "Shilpi Somaya Gowda",
+                cover: "http://2.bp.blogspot.com/-esCRDrYz56g/T1NsBU70VGI/AAAAAAAABKs/o30y5v0a1NA/s1600/SecretDaughter.jpg",
+                description: "A story about an Indian girl adopted by a couple in America, and the unfolding drama between her birth family and adoptive parents.",
+                rating: 4.3,
+                reviews: [
+                    { user: "Rani M.", comment: "A moving and heartfelt exploration of identity.", rating: 5 },
+                    { user: "Kiran V.", comment: "Touches on important themes of family and belonging.", rating: 4 }
+                ]
+            },
+            {
+                id: 16,
+                title: "The Last Song of Dusk",
+                author: "Siddharth Dhanvant Shanghvi",
+                cover: "https://m.media-amazon.com/images/I/41yJcicY1zL.jpghttps://i.pinimg.com/originals/4f/30/76/4f3076b32fdc39e6148567b95ef50341.jpg",
+                description: "A novel set in 1940s India, following a troubled woman's search for identity and the meaning of love in a time of social change.",
+                rating: 4.5,
+                reviews: [
+                    { user: "Karishma A.", comment: "Lushly written with deep emotional insights.", rating: 5 },
+                    { user: "Nisha G.", comment: "The book's atmosphere and mood stayed with me long after.", rating: 4 }
+                ]
+            },
+            {
+                id: 17,
+                title: "The Lowland",
+                author: "Jhumpa Lahiri",
+                cover: "https://cdn.dc5.ro/img-prod/236422-0.jpeg",
+                description: "A story of two brothers from Kolkata, one of whom gets involved in radical politics, and how their lives unfold across continents and generations.",
+                rating: 4.4,
+                reviews: [
+                    { user: "Vikram S.", comment: "A beautifully written tale of loss and reconciliation.", rating: 5 },
+                    { user: "Anita M.", comment: "Lahiri captures the complexities of family with grace.", rating: 4 }
+                ]
+            },
+
+            {
+                id: 18,
+                title: "The Hunger Games",
+                author: "Suzanne Collins",
+                cover: "https://vignette.wikia.nocookie.net/thehungergames/images/d/da/Mockingjay-Part-2-final-Poster.jpg/revision/latest?cb=20151003034521",
+                description: "A gripping young adult dystopian novel set in a world where children are forced to fight to the death in an annual televised event.",
+                rating: 4.5,
+                reviews: [
+                    { user: "Chris M.", comment: "Addictive and thought-provoking.", rating: 5 },
+                    { user: "Olivia P.", comment: "A great start to an exciting trilogy.", rating: 4 }
+                ]
+            },
+            {
+                id: 19,
+                title: "The Alchemist",
+                author: "Paulo Coelho",
+                cover: "https://images-na.ssl-images-amazon.com/images/I/91Mq6XsfWuL.jpg",
+                description: "A philosophical novel about a young shepherd's journey to find his destiny, filled with wisdom and life lessons.",
+                rating: 4.4,
+                reviews: [
+                    { user: "Sam T.", comment: "A beautiful, inspiring story.", rating: 5 },
+                    { user: "Mia C.", comment: "Thought-provoking, but a bit simplistic at times.", rating: 4 }
+                ]
+            },
+            {
+                id: 20,
+                title: "The Kite Runner",
+                author: "Khaled Hosseini",
+                cover: "https://cdn.shopify.com/s/files/1/0601/0883/2974/products/the-kite-runner-10th-anniversary-edition-9781594631931-18262073016469_1100x.jpg?v=1648785328",
+                description: "A moving story of friendship, betrayal, and redemption set against the backdrop of Afghanistan's tumultuous history.",
+                rating: 4.6,
+                reviews: [
+                    { user: "Nadia R.", comment: "Heartbreaking and beautiful. A must-read.", rating: 5 },
+                    { user: "James L.", comment: "Powerful storytelling that stays with you.", rating: 5 }
+                ]
+            },
+            {
+                id: 21,
+                title: "The Martian",
+                author: "Andy Weir",
+                cover: "https://d1cm35kbp068hs.cloudfront.net/umrlnnpd9i/cover.jpg",
+                description: "A science fiction novel about an astronaut stranded on Mars, using his ingenuity and humor to survive against all odds.",
+                rating: 4.5,
+                reviews: [
+                    { user: "Elena M.", comment: "Thrilling and surprisingly funny. Loved the scientific details!", rating: 5 },
+                    { user: "Ryan K.", comment: "A perfect blend of science and storytelling.", rating: 4 }
+                ]
+            },
+            {
+                id: 22,
+                title: "The Catcher in the Rye",
+                author: "J.D. Salinger",
+                cover: "https://www.bookishelf.com/wp-content/uploads/2020/01/Book-Review-The-Catcher-in-the-Rye-by-J-D-Salinger.jpg",
+                description: "A controversial novel about teenage alienation and angst, following the experiences of a troubled young man in New York City.",
+                rating: 4.3,
+                reviews: [
+                    { user: "Tom H.", comment: "A classic that still resonates today.", rating: 5 },
+                    { user: "Rachel B.", comment: "Interesting, but I found the protagonist hard to like.", rating: 3 }
+                ]
+            },
+            {
+                id: 23,
+                title: "The Hobbit",
+                author: "J.R.R. Tolkien",
+                cover: "http://1.bp.blogspot.com/-tz40y0OlrCc/VGfG-NmL_AI/AAAAAAAAAJg/JVArqytkaOE/s1600/81Dd%2BimpKAL.jpg",
+                description: "A beloved fantasy novel about the adventures of Bilbo Baggins, setting the stage for The Lord of the Rings trilogy.",
+                rating: 4.7,
+                reviews: [
+                    { user: "Peter J.", comment: "A magical adventure for all ages!", rating: 5 },
+                    { user: "Sophie L.", comment: "Tolkien's world-building is unparalleled.", rating: 5 }
+                ]
+            },
+            {
+                id: 24,
+                title: "The Da Vinci Code",
+                author: "Dan Brown",
+                cover: "http://ww1.prweb.com/prfiles/2006/07/12/410882/DaVinciBookCover.jpg",
+                description: "A thrilling mystery novel combining codes, symbols, and conspiracy theories with art history and religion.",
+                rating: 4.1,
+                reviews: [
+                    { user: "Mark R.", comment: "Fast-paced and engaging, couldn't put it down!", rating: 5 },
+                    { user: "Anna K.", comment: "Entertaining, but takes some liberties with historical facts.", rating: 4 }
+                ]
+            },
+            {
+                id: 25,
+                title: "The Hunger Games",
+                author: "Suzanne Collins",
+                cover: "https://vignette.wikia.nocookie.net/thehungergames/images/d/da/Mockingjay-Part-2-final-Poster.jpg/revision/latest?cb=20151003034521",
+                description: "A gripping young adult dystopian novel set in a world where children are forced to fight to the death in an annual televised event.",
+                rating: 4.5,
+                reviews: [
+                    { user: "Chris M.", comment: "Addictive and thought-provoking.", rating: 5 },
+                    { user: "Olivia P.", comment: "A great start to an exciting trilogy.", rating: 4 }
+                ]
+            },
+            {
+                id: 26,
+                title: "Pride and Prejudice",
+                author: "Jane Austen",
+                cover: "https://d28hgpri8am2if.cloudfront.net/book_images/onix/cvr9781471134746/pride-and-prejudice-9781471134746_hr.jpg",
+                description: "A classic romance novel that explores themes of love, class, and societal expectations in early 19th-century England.",
+                rating: 4.7,
+                reviews: [
+                    { user: "Emma S.", comment: "A delightful and witty read!", rating: 5 },
+                    { user: "David L.", comment: "Not typically my genre, but I enjoyed it.", rating: 4 }
+                ]
+            },
+            {
+                id: 27,
+                title: "1984",
+                author: "George Orwell",
+                cover: "http://litstack.com/wp-content/uploads/2013/06/1984_poster.jpg",
+                description: "A dystopian novel set in a totalitarian society, warning of the dangers of government overreach and loss of individual freedom.",
+                rating: 4.6,
+                reviews: [
+                    { user: "Alex K.", comment: "Chillingly relevant even today.", rating: 5 },
+                    { user: "Lisa W.", comment: "A thought-provoking read, but quite dark.", rating: 4 }
+                ]
+            },
+            {
+                id: 28,
+                title: "The Great Gatsby",
+                author: "F. Scott Fitzgerald",
+                cover: "https://d28hgpri8am2if.cloudfront.net/book_images/onix/cvr9781471173936/the-great-gatsby-9781471173936_hr.jpg",
+                description: "A classic novel set in the Jazz Age, exploring themes of decadence, idealism, and the American Dream.",
+                rating: 4.5,
+                reviews: [
+                    { user: "John D.", comment: "A timeless masterpiece!", rating: 5 },
+                    { user: "Sarah M.", comment: "Beautifully written, but a bit slow at times.", rating: 4 }
+                ]
+            }
+        ];
+
+        function displayBooks() {
+            const bookList = document.getElementById('bookList');
+            books.forEach(book => {
+                const bookCard = `
+                    <div class="col-md-3 mb-4">
+                        <div class="card book-card">
+                            <img src="${book.cover}" class="card-img-top" alt="${book.title}">
+                            <button class="favorite-btn" onclick="toggleFavorite(this, ${book.id})">
+                                <i class="far fa-heart"></i>
+                            </button>
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title">${book.title}</h5>
+                                <p class="card-text">${book.author}</p>
+                                <div class="mt-auto">
+                                    <button class="btn btn-primary btn-sm" onclick="showBookDetails(${book.id})">View Details</button>
+                                    <button class="btn btn-success btn-sm"   onclick="buyBook(${book.id})">Buy Now</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                bookList.innerHTML += bookCard;
+            });
+        }
+
+        function showBookDetails(bookId) {
+            const book = books.find(b => b.id === bookId);
+            const modal = new bootstrap.Modal(document.getElementById('bookModal'));
+            
+            document.getElementById('bookTitle').textContent = book.title;
+            document.getElementById('bookCover').src = book.cover;
+            document.getElementById('bookAuthor').textContent = `Author: ${book.author}`;
+            document.getElementById('bookDescription').textContent = book.description;
+            
+            const ratingStars = '★'.repeat(Math.round(book.rating)) + '☆'.repeat(5 - Math.round(book.rating));
+            document.getElementById('bookRating').innerHTML = `<p>Rating: ${ratingStars} (${book.rating}/5)</p>`;
+            
+            const reviewsHtml = book.reviews.map(review => `
+                <div class="mb-3">
+                    <h6>${review.user}</h6>
+                    <p>${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)} ${review.comment}</p>
+                </div>
+            `).join('');
+            document.getElementById('bookReviews').innerHTML = reviewsHtml;
+            
+            modal.show();
+        }
+
+        function buyBook(bookId) {
+            const book = books.find(b => b.id === bookId);
+            localStorage.setItem('selectedBook', JSON.stringify(book));
+            window.location.href = 'buy.html';
+        }
+
+        function toggleFavorite(button, bookId) {
+            const icon = button.querySelector('i');
+            icon.classList.toggle('far');
+            icon.classList.toggle('fas');
+        }
+
+        displayBooks();
+    </script>
+</body>
+</html>
